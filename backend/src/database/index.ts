@@ -14,7 +14,7 @@ export const getAll = async (): Promise<UserMessage[]> => {
 export const insertItem = async (data: UserMessage): Promise<UserMessage> => {
   try {
     const payload: UserMessage[] = await getAll();
-    payload.push(data);
+    payload.push({...data, timestamp: new Date().toISOString()});
     await writeFileSync('database.json', JSON.stringify(payload));
     return data as UserMessage;
   } catch (error) {
@@ -34,7 +34,7 @@ export const updateItem = async (data: UserMessage): Promise<UserMessage> => {
     const payload: UserMessage[] = await getAll();
     const myItemIndex = payload.findIndex((message: UserMessage) => message.call_id === data.call_id);
     if (myItemIndex !== -1) {
-      payload[myItemIndex] = data;
+      payload[myItemIndex] = {...data, timestamp: new Date().toISOString()};
       await writeFileSync('database.json', JSON.stringify(payload));
     }
     return data as UserMessage;
@@ -58,8 +58,8 @@ export const reduceQueuePosition = async (): Promise<UserMessage[]> => {
   const allItems = await getAll();
   const payload: UserMessage[] = [];
   for (const item of allItems) {
-    if (item.queue) {
-      payload.push({ ...item, queue: item.queue - 1 });
+    if (item.queue && item.queue > 0) {
+      payload.push({ ...item, queue: item.queue - 1, timestamp: new Date().toISOString() });
     } else {
       payload.push(item);
     }

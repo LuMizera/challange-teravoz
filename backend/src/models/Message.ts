@@ -10,7 +10,6 @@ export interface UserMessage {
     | 'call.finished'
     | '';
   call_id: string;
-  direction: 'internal' | 'inbound' | '';
   our_number: string;
   their_number: string;
   their_number_type?: 'mobile' | 'not mobile' | '';

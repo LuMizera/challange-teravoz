@@ -1,29 +1,49 @@
+import { createServer } from 'http';
 import * as Websocket from 'ws';
 import { UserMessage } from './models/Message';
 import { getAll } from './database';
 import { handleCall } from './handlers/callHandler';
 
-const wss = new Websocket.Server({ port: 5000 });
+const server = createServer();
 
-wss.on('listening', () => console.log('WebSocket running at port 5000'));
+const wss = new Websocket.Server({ server });
+
+const clients: any[] = [];
 
 wss.on('connection', async (ws: Websocket) => {
+  const clientId = Date.now();
+  clients.push({ clientId, ws });
   ws.send(JSON.stringify(await getAll()));
+
   ws.on('message', async (userMessage: string) => {
     let message: UserMessage = {
       type: '',
       call_id: '',
-      direction: '',
       our_number: '',
       their_number: '',
       timestamp: ''
     };
     try {
       message = (JSON.parse(userMessage) as unknown) as UserMessage;
+      await handleCall(message, clients);
+      for (let client of clients) {
+        client.ws.send(JSON.stringify(await getAll()));
+      }
     } catch (error) {
-      // SAVE ERROR
+      for (let client of clients) {
+        client.ws.send(JSON.stringify(await getAll()));
+      }
     }
-    message = await handleCall(message, ws);
-    ws.send(JSON.stringify(message));
   });
+
+  ws.on('close', () => {
+    const index = clients.findIndex(client => client.clientId === clientId);
+    if (index !== -1) {
+      const remove = clients.splice(index, 1);
+    }
+  });
+});
+
+server.listen(process.env.PORT || 5000, () => {
+  console.log(`Server started on port ${process.env.PORT || 5000}`);
 });

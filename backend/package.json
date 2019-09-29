@@ -8,8 +8,8 @@
     "watch": "tsc -w",
     "start": "npm run start:api:dev & npm run watch",
     "start:api:dev": "nodemon dist/index.js",
-    "prod": "npm run build && npm run start:api:prod", 
-    "start:api:prod" : "node dist/index.js"
+    "prod": "npm run build && npm run start:api:prod",
+    "start:api:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
