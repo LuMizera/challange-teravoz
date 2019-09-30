@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  backend:
+    container_name: 'backend-websocket'
+    build:
+      context: ./backend
+    image: backend-websocket:1.0
+    volumes:
+      - ./backend:/var/www/backend:cached
+    ports:
+      - 5000:5000
+
+  frontend:
+    depends_on:
+      - backend
+    container_name: 'frontend-react'
+    build:
+      context: ./frontend
+    image: frontend-react:1.0
+    volumes:
+      - ./frontend:/var/www/frontend:cached
+    ports:
+      - '3000:3000'
