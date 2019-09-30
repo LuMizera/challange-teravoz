@@ -14,7 +14,7 @@ export const getAll = async (): Promise<UserMessage[]> => {
 export const insertItem = async (data: UserMessage): Promise<UserMessage> => {
   try {
     const payload: UserMessage[] = await getAll();
-    payload.push({...data, timestamp: new Date().toISOString()});
+    payload.push({ ...data, timestamp: new Date().toISOString() });
     await writeFileSync('database.json', JSON.stringify(payload));
     return data as UserMessage;
   } catch (error) {
@@ -34,7 +34,7 @@ export const updateItem = async (data: UserMessage): Promise<UserMessage> => {
     const payload: UserMessage[] = await getAll();
     const myItemIndex = payload.findIndex((message: UserMessage) => message.call_id === data.call_id);
     if (myItemIndex !== -1) {
-      payload[myItemIndex] = {...data, timestamp: new Date().toISOString()};
+      payload[myItemIndex] = { ...data, timestamp: new Date().toISOString() };
       await writeFileSync('database.json', JSON.stringify(payload));
     }
     return data as UserMessage;
@@ -66,4 +66,14 @@ export const reduceQueuePosition = async (): Promise<UserMessage[]> => {
   }
   await writeFileSync('database.json', JSON.stringify(payload));
   return payload;
+};
+
+export const checkReturning = async (phoneNumber: string, callId: string): Promise<boolean> => {
+  const allCalls = await getAll();
+
+  if (allCalls.find((call: UserMessage) => call.their_number === phoneNumber && call.call_id !== callId)) {
+    return true;
+  } else {
+    return false;
+  }
 };

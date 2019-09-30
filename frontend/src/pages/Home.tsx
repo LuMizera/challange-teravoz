@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadCalls,
   toggleCreateModal,
-  toggleAttendModal
+  toggleAttendModal,
+  changeFilter
 } from "../store/ducks/home/actions";
 import { ApplicationState } from "../models";
 import Table from "./components/home/Table";
@@ -35,6 +36,10 @@ const Home: React.FC = () => {
     dispatch(toggleAttendModal());
   };
 
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(changeFilter(event.target.value));
+  };
+
   useEffect(() => {
     dispatch(setWebsocket(ws));
   }, []);
@@ -53,11 +58,17 @@ const Home: React.FC = () => {
               <label className="label">Status</label>
               <div className="control">
                 <div className="select">
-                  <select defaultValue="">
-                    <option value="" disabled>
-                      Select...
+                  <select defaultValue="" onChange={handleFilterChange}>
+                    <option value="">All</option>
+                    <option value="call.new">New call</option>
+                    <option value="call.standby">Standby call</option>
+                    <option value="call.waiting">Waiting to be answered</option>
+                    <option value="actor.entered">
+                      Waiting for the attendant
                     </option>
-                    <option>With options</option>
+                    <option value="call.ongoing">Call is ongoing</option>
+                    <option value="actor.left">Client left</option>
+                    <option value="call.finished">Call finished</option>
                   </select>
                 </div>
               </div>

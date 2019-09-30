@@ -19,16 +19,12 @@ wss.on('connection', async (ws: Websocket) => {
     let message: UserMessage = {
       type: '',
       call_id: '',
-      our_number: '',
       their_number: '',
       timestamp: ''
     };
     try {
       message = (JSON.parse(userMessage) as unknown) as UserMessage;
       await handleCall(message, clients);
-      for (let client of clients) {
-        client.ws.send(JSON.stringify(await getAll()));
-      }
     } catch (error) {
       for (let client of clients) {
         client.ws.send(JSON.stringify(await getAll()));

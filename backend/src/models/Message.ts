@@ -1,7 +1,6 @@
 export interface UserMessage {
   type:
     | 'call.new'
-    | 'dialer'
     | 'call.standby'
     | 'call.waiting'
     | 'actor.entered'
@@ -10,30 +9,11 @@ export interface UserMessage {
     | 'call.finished'
     | '';
   call_id: string;
-  our_number: string;
+  our_branch_line?: string;
   their_number: string;
-  their_number_type?: 'mobile' | 'not mobile' | '';
+  their_number_type?: 'mobile' | 'notMobile' | '';
   timestamp: string;
   queue?: number;
   actor?: string;
-  number?: string; // número do ramal do atendente
+  returningCall?: boolean;
 }
-
-// export interface Dialer {
-//   type: 'dialer' | '';
-//   numbers: [string];
-//   destination: string;
-//   destination_type: 'queue' | 'perr' | 'conference' | 'custom' | '';
-//   code:
-//     | 'call.new'
-//     | 'call.standby'
-//     | 'call.waiting'
-//     | 'call.ongoing'
-//     | 'call.overflow'
-//     | 'call.follow-me'
-//     | 'call.finished'
-//     | '';
-//   retries: string;
-//   retry_gap: string;
-//   ttl: string;
-// }

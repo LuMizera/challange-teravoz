@@ -13,3 +13,8 @@ export const toggleCreateModal = () => ({
 export const toggleAttendModal = () => ({
   type: HomeTypes.TOGGLE_ATTEND_MODAL
 });
+
+export const changeFilter = (payload: string) => ({
+  type: HomeTypes.CHANGE_FILTER,
+  payload
+});

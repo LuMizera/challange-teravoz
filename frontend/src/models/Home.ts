@@ -1,7 +1,22 @@
-export interface Call {
+export interface Call extends CallStatus {
+  call_id: string;
+  our_branch_line?: string;
+  their_number: string;
+  their_number_type?: "mobile" | "notMobile" | "";
+  timestamp: string;
+  queue?: number;
+  actor?: string;
+  returningCall?: boolean;
+}
+
+export interface HomeModals {
+  createOpen: boolean;
+  attendQueueModal: boolean;
+}
+
+export interface CallStatus {
   type:
     | "call.new"
-    | "dialer"
     | "call.standby"
     | "call.waiting"
     | "actor.entered"
@@ -9,18 +24,4 @@ export interface Call {
     | "actor.left"
     | "call.finished"
     | "";
-  call_id: string;
-  direction: "internal" | "inbound" | "";
-  our_number: string;
-  their_number: string;
-  their_number_type?: "mobile" | "not mobile" | "";
-  timestamp: string;
-  queue?: number;
-  actor?: string;
-  number?: string; // número do ramal do atendente
-}
-
-export interface HomeModals {
-  createOpen: boolean;
-  attendQueueModal: boolean;
 }

@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <Routes />;
+      <Routes />
     </Provider>
   );
 };

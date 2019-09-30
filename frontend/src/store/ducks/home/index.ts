@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { HomeModals } from "../../../models";
+import { HomeModals, CallStatus } from "../../../models";
 import { HomeReducerState, HomeTypes } from "./types";
 
 const INITAL_MODALS: HomeModals = {
@@ -7,9 +7,14 @@ const INITAL_MODALS: HomeModals = {
   attendQueueModal: false
 };
 
+const INITIAL_FILTE: CallStatus = {
+  type: ""
+};
+
 const INITIAL_STATE: HomeReducerState = {
   data: [],
-  modals: INITAL_MODALS
+  modals: INITAL_MODALS,
+  filters: INITIAL_FILTE
 };
 
 const reducer: Reducer<HomeReducerState> = (state = INITIAL_STATE, action) => {
@@ -30,6 +35,14 @@ const reducer: Reducer<HomeReducerState> = (state = INITIAL_STATE, action) => {
         modals: {
           ...state.modals,
           attendQueueModal: !state.modals.attendQueueModal
+        }
+      };
+    case HomeTypes.CHANGE_FILTER:
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          type: action.payload
         }
       };
     default:

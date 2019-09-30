@@ -27,6 +27,10 @@ const TableLine: React.FC<OwnProps> = ({ call }: OwnProps) => {
         return "Waiting for the attendant";
       case "call.ongoing":
         return "Call is ongoing";
+      case "actor.left":
+        return "Client left";
+      case "call.finished":
+        return "Call finished";
       default:
         return "";
     }
@@ -75,6 +79,24 @@ const TableLine: React.FC<OwnProps> = ({ call }: OwnProps) => {
     dispatch(toggleAttendModal());
   };
 
+  const handleLeaveCall = (callId: string) => {
+    if (ws) {
+      ws.send(JSON.stringify({ call_id: callId, type: "actor.left" }));
+    }
+  };
+
+  const formatReturningCall = (returningCall: boolean | undefined): string => {
+    if (returningCall !== undefined) {
+      if (returningCall === true) {
+        return "Yes";
+      } else {
+        return "No";
+      }
+    } else {
+      return "Not defined yet.";
+    }
+  };
+
   const handleButton = (call: Call) => {
     switch (call.type) {
       case "call.new":
@@ -89,7 +111,7 @@ const TableLine: React.FC<OwnProps> = ({ call }: OwnProps) => {
       case "call.standby":
         return (
           <button className="button is-danger" disabled>
-            Call is beign Delegated
+            Delegating call
           </button>
         );
       case "call.waiting":
@@ -113,7 +135,26 @@ const TableLine: React.FC<OwnProps> = ({ call }: OwnProps) => {
           </button>
         );
       case "call.ongoing":
-        return <button className="button is-danger">Leave Call</button>;
+        return (
+          <button
+            className="button is-danger"
+            onClick={() => handleLeaveCall(call.call_id)}
+          >
+            Leave Call
+          </button>
+        );
+      case "actor.left":
+        return (
+          <button className="button is-danger" disabled>
+            Finishing call
+          </button>
+        );
+      case "call.finished":
+        return (
+          <button className="button is-danger" disabled>
+            Call finished
+          </button>
+        );
       default:
         return "";
     }
@@ -123,8 +164,9 @@ const TableLine: React.FC<OwnProps> = ({ call }: OwnProps) => {
       <td>{call.queue === 0 ? "Not in Queue" : call.queue}</td>
       <td>{tranformStatus(call.type)}</td>
       <td>{tranformTelephone(call.their_number)}</td>
-      <td>{call.actor ? call.actor : "Not assigned yet."}</td>
+      <td>{call.actor ? call.actor : "Not assigned yet"}</td>
       <td>{formatDate(call.timestamp)}</td>
+      <td>{formatReturningCall(call.returningCall)}</td>
       <td>{handleButton(call)}</td>
     </tr>
   );
