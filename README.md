@@ -32,6 +32,8 @@ The dashboard that was developed with Reactjs and Typescript can trigger the sta
 The api was made on Nodejs and Typescript, the api manages all the data and always will return on a websocket to mantain the frontend up-to-date.
 The api also doesn't has a database, its data is stored pon a file called database.json.
 
+Some actions will take a while, 10 seconds to be more exact, and this is made to simulate how it would go on a real scenario.
+
 ## Warning
 
 - The file database.json shoudn't be deleted, if it's deleted or isn't an array type it will break the entire application.
